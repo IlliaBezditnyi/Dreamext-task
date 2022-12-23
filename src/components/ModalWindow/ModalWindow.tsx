@@ -35,7 +35,7 @@ const ModalWindow: FC<ModalProps> = ({id, setOpenModal}) => {
         setIsLoading(false);
         setComments(response.data);
       });
-  });
+  }, [id]);
 
   console.log(comments);
 

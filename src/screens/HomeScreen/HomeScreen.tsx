@@ -29,7 +29,7 @@ const HomeScreen: FC = () => {
         setIsLoading(false);
         setData(response.data);
       });
-  }, [data]);
+  }, []);
 
   console.log(data);
 
