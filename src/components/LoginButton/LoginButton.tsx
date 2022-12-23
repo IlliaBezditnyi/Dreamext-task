@@ -1,20 +1,17 @@
-import {Text, StyleSheet, Pressable} from 'react-native';
+import {Pressable, StyleSheet, Text} from 'react-native';
 import React, {FC} from 'react';
+import {LoginButtonProps} from '../../types';
 
-interface ButtonProps {
-  onPress: (event: any) => void;
-}
-
-const LoginButton: FC<ButtonProps> = ({onPress}) => {
+const LoginButton: FC<LoginButtonProps> = ({title, onPress}) => {
   return (
-    <Pressable onPress={onPress} style={styles.container}>
-      <Text style={styles.text}>Log in</Text>
+    <Pressable style={styles.button} onPress={onPress}>
+      <Text style={styles.text}>{title}</Text>
     </Pressable>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  button: {
     backgroundColor: '#3b71f3',
     width: '100%',
     padding: 15,
@@ -23,8 +20,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   text: {
+    color: '#fff',
     fontWeight: 'bold',
-    color: 'white',
   },
 });
 

@@ -1,45 +1,61 @@
-import React, {useState} from 'react';
+import React, {FC} from 'react';
 import {View, Image, StyleSheet, useWindowDimensions} from 'react-native';
-import Input from '../../components/Input';
-import LoginButton from '../../components/LoginButton';
-import logo from '../../../assets/images/login-logo.png';
+import loginLogo from '../../../assets/images/login-logo.png';
 import {useNavigation} from '@react-navigation/native';
+import {RootStackParamList} from '../../navigation/types';
+import {StackNavigationProp} from '@react-navigation/stack';
+import CustomInput from '../../components/CustomInput';
+import LoginButton from '../../components/LoginButton';
+import {useForm} from 'react-hook-form';
 
-const LoginScreen = () => {
+const EMAIL_REGEX =
+  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+const LoginScreen: FC = () => {
   const {height} = useWindowDimensions();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const {navigate} = useNavigation<StackNavigationProp<RootStackParamList>>();
 
-  const navigation = useNavigation();
+  const {control, handleSubmit, formState, resetField} = useForm({
+    mode: 'onChange',
+  });
 
-  const onLogInPressed = () => {
-    navigation.navigate('Home');
+  const onLogInPressed = (data: any) => {
+    console.log(data);
+    navigate('Home');
+    resetField('email');
+    resetField('password');
   };
 
   return (
     <View style={styles.root}>
       <Image
-        source={logo}
+        source={loginLogo}
         style={[styles.logo, {height: height * 0.2}]}
         resizeMode="contain"
       />
 
-      <Input
+      <CustomInput
+        name="email"
         placeholder="Email"
-        value={email}
-        setValue={setEmail}
-        secureTextEntry={false}
+        control={control}
+        rules={{
+          required: 'Email is required',
+          pattern: {value: EMAIL_REGEX, message: 'Invalid email'},
+        }}
       />
 
-      <Input
+      <CustomInput
+        name="password"
         placeholder="Password"
-        value={password}
-        setValue={setPassword}
-        secureTextEntry={true}
+        control={control}
+        secureTextEntry
+        rules={{required: 'Password is required'}}
       />
 
-      {email && password ? <LoginButton onPress={onLogInPressed} /> : null}
+      {formState.isDirty && formState.isValid ? (
+        <LoginButton title="Login" onPress={handleSubmit(onLogInPressed)} />
+      ) : null}
     </View>
   );
 };
